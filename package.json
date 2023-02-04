@@ -15,7 +15,8 @@
   ],
   "scripts": {
     "dev": "vite",
-    "build": "vite build"
+    "build": "vite build",
+    "lint": "tsc"
   },
   "dependencies": {
     "dot-path-value": "0.0.4",

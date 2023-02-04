@@ -1,7 +1,6 @@
 import { createForm } from "./form/createForm";
 import { z } from "zod";
-import { useAtom } from "jotai/react";
-import { Fragment } from "react";
+import { useAtomValue } from "jotai/react";
 
 const DemoForm = createForm({
   schema: z.object({
@@ -16,54 +15,73 @@ const DemoForm = createForm({
 
 const firstNameAtom = DemoForm.getFieldAtom("firstName");
 const lastNameAtom = DemoForm.getFieldAtom("lastName");
-const addressStreetAtom = DemoForm.getFieldAtom("address.street");
-const addressCityAtom = DemoForm.getFieldAtom("address.city");
+const addressAtom = DemoForm.getFieldAtom("address");
 
-function Child() {
-  return (
-    <DemoForm.Field name="firstName">
-      {({ setValue, value, initialValue, isValid, isDirty }) => (
-        <Fragment>
-          <div>Initial value: {initialValue}</div>
-          <div>Is valid: {isValid ? "yup" : "nope"}</div>
-          <div>Is dirty: {isDirty ? "yup" : "nope"}</div>
-          <input value={value} onChange={(e) => setValue(e.target.value)} />
-        </Fragment>
-      )}
-    </DemoForm.Field>
-  );
-}
-
-function Overview() {
-  const [field, setField] = useAtom(firstNameAtom);
-
-  return <div>Overview: {field.value}</div>;
-}
-
-function Child2() {
+function Form() {
   return (
     <div>
-      <DemoForm.Field name="lastName">
+      <h3>General Info</h3>
+      <DemoForm.Field name="firstName">
         {({ value, setValue }) => (
-          <input value={value} onChange={(e) => setValue(e.target.value)} />
+          <label>
+            First name:
+            <input value={value} onChange={(e) => setValue(e.target.value)} />
+          </label>
         )}
       </DemoForm.Field>
+      <br />
+      <DemoForm.Field name="lastName">
+        {({ value, setValue }) => (
+          <label>
+            Last name:
+            <input value={value} onChange={(e) => setValue(e.target.value)} />
+          </label>
+        )}
+      </DemoForm.Field>
+      <h3>Address</h3>
       <DemoForm.Field name="address.street">
         {({ value, setValue }) => (
-          <input value={value} onChange={(e) => setValue(e.target.value)} />
+          <label>
+            Street:
+            <input value={value} onChange={(e) => setValue(e.target.value)} />
+          </label>
+        )}
+      </DemoForm.Field>
+      <br />
+      <DemoForm.Field name="address.city">
+        {({ value, setValue }) => (
+          <label>
+            City:
+            <input value={value} onChange={(e) => setValue(e.target.value)} />
+          </label>
         )}
       </DemoForm.Field>
     </div>
   );
 }
 
-function Overview2() {
-  const [field, setField] = useAtom(lastNameAtom);
-  const [addressStreet, setAddressStreet] = useAtom(addressStreetAtom);
+function Overview() {
+  const lastName = useAtomValue(lastNameAtom);
+  const firstName = useAtomValue(firstNameAtom);
 
   return (
     <div>
-      Overview: {field.value} - street: {addressStreet.value}
+      First name: {firstName.value} - Dirty:{""}
+      {firstName.isDirty ? "Yurp" : "nope"} - isValid:{" "}
+      {firstName.isValid ? "yurp" : "nope"} <br />
+      Last name: {lastName.value} <br />
+      <AddressOverview />
+    </div>
+  );
+}
+
+function AddressOverview() {
+  const address = useAtomValue(addressAtom);
+
+  return (
+    <div>
+      City: {address.value.city} <br />
+      street: {address.value.street}
     </div>
   );
 }
@@ -82,29 +100,11 @@ function Demo() {
         }}
         onSubmit={(values) => console.log({ values })}
       >
-        <Child />
+        <Form />
+        <hr />
+
         <Overview />
-        <Child2 />
-        <Overview2 />
         <button type="submit">Submit</button>
-      </DemoForm.Form>
-      <div style={{ margin: "60px 0" }} />
-      <DemoForm.Form
-        initialValues={{
-          firstName: "firstName 2",
-          lastName: "lastName 2",
-          address: {
-            city: "",
-            street: "",
-          },
-        }}
-        onSubmit={(values) => console.log({ values })}
-      >
-        <Child />
-        <Overview />
-        <Child2 />
-        <Overview2 />
-        <button type="submit">Submit 2</button>
       </DemoForm.Form>
     </>
   );

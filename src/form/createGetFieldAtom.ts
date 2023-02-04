@@ -36,16 +36,26 @@ export function createGetFieldAtom<T extends z.AnyZodObject>({
   schema,
 }: CreateGetFieldAtomArgs<T>) {
   return <Field extends Path<z.output<T>>>(field: Field) => {
+    const valueAtom = atom(
+      (get) => {
+        const fields = get(stateAtom);
+
+        return getByPath(fields, field);
+      },
+      (get, set, newValue: PathValue<z.output<T>, Field>) => {
+        const fields = get(stateAtom);
+        const clone = structuredClone(fields);
+        const finalNewValue = loSet(clone, field, newValue);
+        set(stateAtom, finalNewValue);
+      }
+    );
+
     return atom(
       (get): FieldState<PathValue<z.output<T>, Field>> => {
-        const fields = get(stateAtom);
-        const initialValues = get(initialValuesAtom);
+        const value = get(valueAtom);
+        const initialValue = getByPath(get(initialValuesAtom), field);
 
-        const value = getByPath(fields, field);
-        const initialValue = getByPath(initialValues, field);
-        const validate = validatePart(schema, field);
-
-        const validateResult = validate(value);
+        const validateResult = validatePart(schema, field)(value);
 
         return {
           value,
@@ -55,11 +65,8 @@ export function createGetFieldAtom<T extends z.AnyZodObject>({
           errors: validateResult.success ? [] : validateResult.error.errors,
         };
       },
-      (get, set, newValue: PathValue<z.output<T>, Field>) => {
-        const fields = get(stateAtom);
-        const clone = structuredClone(fields);
-        const finalNewValue = loSet(clone, field, newValue);
-        set(stateAtom, finalNewValue);
+      (_, set, newValue: PathValue<z.output<T>, Field>) => {
+        set(valueAtom, newValue);
       }
     );
   };

@@ -58,5 +58,5 @@ function HydrateAtoms({
   children,
 }: PropsWithChildren<HydrateAtomsProps>) {
   useHydrateAtoms(initialValues);
-  return <Fragment> {children}</Fragment>;
+  return <Fragment>{children}</Fragment>;
 }

@@ -15,7 +15,7 @@ export function createForm<T extends z.AnyZodObject>({
 
   return {
     Form: createFormComponent({ schema, stateAtom }),
-    getFieldAtom: createGetFieldAtom({ stateAtom }),
+    getFieldAtom: createGetFieldAtom<T>({ stateAtom }),
   };
 }
 

@@ -13,7 +13,7 @@ const DemoForm = createForm({
   }),
 });
 
-const firstNameAtom = DemoForm.getFieldAtom("");
+const firstNameAtom = DemoForm.getFieldAtom("firstName");
 const lastNameAtom = DemoForm.getFieldAtom("lastName");
 const addressStreetAtom = DemoForm.getFieldAtom("address.street");
 const addressCityAtom = DemoForm.getFieldAtom("address.city");

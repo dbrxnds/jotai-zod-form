@@ -19,12 +19,12 @@ const addressStreetAtom = DemoForm.getFieldAtom("address.street");
 const addressCityAtom = DemoForm.getFieldAtom("address.city");
 
 function Child() {
-  const [field, setField] = useAtom(firstNameAtom);
-
   return (
-    <div>
-      <input value={field} onChange={(e) => setField(e.target.value)} />
-    </div>
+    <DemoForm.Field name="firstName">
+      {({ value, setValue }) => (
+        <input value={value} onChange={(e) => setValue(e.target.value)} />
+      )}
+    </DemoForm.Field>
   );
 }
 
@@ -35,16 +35,18 @@ function Overview() {
 }
 
 function Child2() {
-  const [field, setField] = useAtom(lastNameAtom);
-  const [addressStreet, setAddressStreet] = useAtom(addressStreetAtom);
-
   return (
     <div>
-      <input value={field} onChange={(e) => setField(e.target.value)} />
-      <input
-        value={addressStreet}
-        onChange={(e) => setAddressStreet(e.target.value)}
-      />
+      <DemoForm.Field name="lastName">
+        {({ value, setValue }) => (
+          <input value={value} onChange={(e) => setValue(e.target.value)} />
+        )}
+      </DemoForm.Field>
+      <DemoForm.Field name="address.street">
+        {({ value, setValue }) => (
+          <input value={value} onChange={(e) => setValue(e.target.value)} />
+        )}
+      </DemoForm.Field>
     </div>
   );
 }

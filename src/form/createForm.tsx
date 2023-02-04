@@ -64,7 +64,7 @@ interface FieldComponentProps<
 }
 
 interface CreateFieldComponentOptions<T extends z.AnyZodObject> {
-  getFieldAtom: ReturnType<typeof createGetFieldAtom>;
+  getFieldAtom: ReturnType<typeof createGetFieldAtom<T>>;
 }
 
 function createFieldComponent<T extends z.AnyZodObject>({

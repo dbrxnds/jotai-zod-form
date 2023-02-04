@@ -1,10 +1,10 @@
 import { z } from "zod";
 import { Path, PathValue } from "dot-path-value";
-import { createGetFieldAtom, FieldState } from "./createGetFieldAtom";
-import { Fragment, useState } from "react";
-import { useAtom } from "jotai/react";
+import { FieldState } from "./createGetFieldAtom";
+import { Fragment } from "react";
+import { createUseField } from "./createUseField";
 
-interface FieldComponentRenderProps<
+export interface FieldComponentRenderProps<
   Schema extends z.AnyZodObject,
   Field extends Path<z.output<Schema>>,
   Value extends PathValue<z.output<Schema>, Field> = PathValue<
@@ -24,18 +24,17 @@ interface FieldComponentProps<
 }
 
 interface CreateFieldComponentOptions<Schema extends z.AnyZodObject> {
-  getFieldAtom: ReturnType<typeof createGetFieldAtom<Schema>>;
+  useField: ReturnType<typeof createUseField<Schema>>;
 }
 
 export function createFieldComponent<Schema extends z.AnyZodObject>({
-  getFieldAtom,
+  useField,
 }: CreateFieldComponentOptions<Schema>) {
   return <Field extends Path<z.output<Schema>>>({
     name,
     children,
   }: FieldComponentProps<Schema, Field>) => {
-    const [atom] = useState(() => getFieldAtom(name));
-    const [field, setValue] = useAtom(atom);
+    const [field, setValue] = useField(name);
 
     return <Fragment>{children({ ...field, setValue })}</Fragment>;
   };

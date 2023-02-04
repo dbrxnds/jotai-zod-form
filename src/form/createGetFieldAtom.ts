@@ -28,14 +28,14 @@ function validatePart<Schema extends z.AnyZodObject>(
 }
 
 interface CreateGetFieldAtomArgs<Schema extends z.AnyZodObject> {
-  stateAtom: PrimitiveAtom<z.output<Schema>>;
+  formStateAtom: PrimitiveAtom<z.output<Schema>>;
   initialValuesAtom: PrimitiveAtom<z.output<Schema>>;
   schema: Schema;
   equals: (a: z.output<Schema>, b: z.output<Schema>) => boolean;
 }
 
 export function createGetFieldAtom<Schema extends z.AnyZodObject>({
-  stateAtom,
+  formStateAtom,
   initialValuesAtom,
   schema,
   equals,
@@ -43,15 +43,15 @@ export function createGetFieldAtom<Schema extends z.AnyZodObject>({
   return <Field extends Path<z.output<Schema>>>(field: Field) => {
     const valueAtom = atom(
       (get) => {
-        const fields = get(stateAtom);
+        const fields = get(formStateAtom);
 
         return getByPath(fields, field);
       },
       (get, set, newValue: PathValue<z.output<Schema>, Field>) => {
-        const fields = get(stateAtom);
+        const fields = get(formStateAtom);
         const clone = structuredClone(fields);
         const finalNewValue = loSet(clone, field, newValue);
-        set(stateAtom, finalNewValue);
+        set(formStateAtom, finalNewValue);
       }
     );
 

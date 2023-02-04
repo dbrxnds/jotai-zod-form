@@ -3,23 +3,24 @@ import { Fragment, PropsWithChildren, useState } from "react";
 import { Provider } from "jotai/react";
 import { createStore, PrimitiveAtom } from "jotai/vanilla";
 import { useHydrateAtoms } from "jotai/react/utils";
-import { equals } from "remeda";
 
 interface CreateFormComponentOptions<Schema extends z.AnyZodObject> {
   schema: Schema;
   stateAtom: PrimitiveAtom<z.output<Schema>>;
   initialValuesAtom: PrimitiveAtom<z.output<Schema>>;
+  equals: (a: z.output<Schema>, b: z.output<Schema>) => boolean;
 }
 
-interface FormProps<T extends z.AnyZodObject> {
-  initialValues: z.output<T>;
-  onSubmit: (values: z.output<T>) => Promise<void> | void;
+interface FormProps<Schema extends z.AnyZodObject> {
+  initialValues: z.output<Schema>;
+  onSubmit: (values: z.output<Schema>) => Promise<void> | void;
 }
 
 export function createFormComponent<Schema extends z.AnyZodObject>({
   schema,
   stateAtom,
   initialValuesAtom,
+  equals,
 }: CreateFormComponentOptions<Schema>) {
   return ({
     initialValues,

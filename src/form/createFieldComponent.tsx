@@ -5,32 +5,35 @@ import { Fragment, useState } from "react";
 import { useAtom } from "jotai/react";
 
 interface FieldComponentRenderProps<
-  T extends z.AnyZodObject,
-  Field extends Path<z.output<T>>,
-  Value extends PathValue<z.output<T>, Field> = PathValue<z.output<T>, Field>
+  Schema extends z.AnyZodObject,
+  Field extends Path<z.output<Schema>>,
+  Value extends PathValue<z.output<Schema>, Field> = PathValue<
+    z.output<Schema>,
+    Field
+  >
 > extends FieldState<Value> {
   setValue: (newValue: Value) => void;
 }
 
 interface FieldComponentProps<
-  T extends z.AnyZodObject,
-  Field extends Path<z.output<T>>
+  Schema extends z.AnyZodObject,
+  Field extends Path<z.output<Schema>>
 > {
   name: Field;
-  children: (props: FieldComponentRenderProps<T, Field>) => JSX.Element;
+  children: (props: FieldComponentRenderProps<Schema, Field>) => JSX.Element;
 }
 
-interface CreateFieldComponentOptions<T extends z.AnyZodObject> {
-  getFieldAtom: ReturnType<typeof createGetFieldAtom<T>>;
+interface CreateFieldComponentOptions<Schema extends z.AnyZodObject> {
+  getFieldAtom: ReturnType<typeof createGetFieldAtom<Schema>>;
 }
 
-export function createFieldComponent<T extends z.AnyZodObject>({
+export function createFieldComponent<Schema extends z.AnyZodObject>({
   getFieldAtom,
-}: CreateFieldComponentOptions<T>) {
-  return <Field extends Path<z.output<T>>>({
+}: CreateFieldComponentOptions<Schema>) {
+  return <Field extends Path<z.output<Schema>>>({
     name,
     children,
-  }: FieldComponentProps<T, Field>) => {
+  }: FieldComponentProps<Schema, Field>) => {
     const [atom] = useState(() => getFieldAtom(name));
     const [field, setValue] = useAtom(atom);
 

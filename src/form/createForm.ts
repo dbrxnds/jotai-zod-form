@@ -4,13 +4,15 @@ import { atom } from "jotai/vanilla";
 import { createGetFieldAtom } from "./createGetFieldAtom";
 import { createFieldComponent } from "./createFieldComponent";
 
-interface FormOptions<T extends z.AnyZodObject> {
-  schema: T;
+interface FormOptions<Schema extends z.AnyZodObject> {
+  schema: Schema;
+  equals?: (a: z.output<Schema>, b: z.output<Schema>) => boolean;
 }
 
-export function createForm<T extends z.AnyZodObject>({
+export function createForm<Schema extends z.AnyZodObject>({
   schema,
-}: FormOptions<T>) {
+  equals = (a, b) => a === b,
+}: FormOptions<Schema>) {
   const stateAtom = atom({});
   const initialValuesAtom = atom({});
 
@@ -18,11 +20,12 @@ export function createForm<T extends z.AnyZodObject>({
     stateAtom,
     initialValuesAtom,
     schema,
+    equals,
   });
 
   return {
-    Form: createFormComponent({ schema, stateAtom, initialValuesAtom }),
+    Form: createFormComponent({ schema, stateAtom, initialValuesAtom, equals }),
     getFieldAtom,
-    Field: createFieldComponent<T>({ getFieldAtom }),
+    Field: createFieldComponent<Schema>({ getFieldAtom }),
   };
 }

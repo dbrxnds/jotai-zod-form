@@ -2,6 +2,7 @@ import { createForm } from "./form/createForm";
 import { z } from "zod";
 import { useAtomValue } from "jotai/react";
 import { useRef } from "react";
+import { equals } from "remeda";
 
 const DemoForm = createForm({
   schema: z.object({
@@ -12,6 +13,7 @@ const DemoForm = createForm({
       city: z.string(),
     }),
   }),
+  equals,
 });
 
 function RenderCounter() {
@@ -73,25 +75,39 @@ function Overview() {
   const firstName = useAtomValue(firstNameAtom);
 
   return (
-    <div style={{ padding: 8, backgroundColor: "red" }}>
+    <div style={{ padding: 8, backgroundColor: "yellow" }}>
       <RenderCounter />
-      First name: {firstName.value} - Dirty:{""}
-      {firstName.isDirty ? "Yurp" : "nope"} - isValid:{" "}
-      {firstName.isValid ? "yurp" : "nope"} <br />
-      Last name: {lastName.value} <br />
+      <div>
+        Last name: <pre>{JSON.stringify(lastName, null, 2)}</pre>
+      </div>
+      <div>
+        First name: <pre>{JSON.stringify(firstName, null, 2)}</pre>
+      </div>
       <AddressOverview />
     </div>
   );
 }
 
+const CityAtom = DemoForm.getFieldAtom("address.city");
+const StreetAtom = DemoForm.getFieldAtom("address.street");
+
 function AddressOverview() {
   const address = useAtomValue(addressAtom);
+  const city = useAtomValue(CityAtom);
+  const street = useAtomValue(StreetAtom);
 
   return (
     <div style={{ padding: 8, backgroundColor: "green" }}>
       <RenderCounter />
-      City: {address.value.city} <br />
-      street: {address.value.street}
+      <div>
+        Address: <pre>{JSON.stringify(address, null, 2)}</pre>
+      </div>
+      <div>
+        City: <pre>{JSON.stringify(city, null, 2)}</pre>
+      </div>
+      <div>
+        Street: <pre>{JSON.stringify(street, null, 2)}</pre>
+      </div>
     </div>
   );
 }

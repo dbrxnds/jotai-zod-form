@@ -3,10 +3,12 @@ import { Fragment, PropsWithChildren, useState } from "react";
 import { Provider } from "jotai/react";
 import { createStore, PrimitiveAtom } from "jotai/vanilla";
 import { useHydrateAtoms } from "jotai/react/utils";
+import { equals } from "remeda";
 
 interface CreateFormComponentOptions<Schema extends z.AnyZodObject> {
   schema: Schema;
   stateAtom: PrimitiveAtom<z.output<Schema>>;
+  initialValuesAtom: PrimitiveAtom<z.output<Schema>>;
 }
 
 interface FormProps<T extends z.AnyZodObject> {
@@ -17,6 +19,7 @@ interface FormProps<T extends z.AnyZodObject> {
 export function createFormComponent<Schema extends z.AnyZodObject>({
   schema,
   stateAtom,
+  initialValuesAtom,
 }: CreateFormComponentOptions<Schema>) {
   return ({
     initialValues,
@@ -24,6 +27,10 @@ export function createFormComponent<Schema extends z.AnyZodObject>({
     children,
   }: PropsWithChildren<FormProps<Schema>>) => {
     const [store] = useState(() => createStore());
+
+    if (!equals(store.get(initialValuesAtom), initialValues)) {
+      store.set(initialValuesAtom, initialValues);
+    }
 
     return (
       <Provider store={store}>

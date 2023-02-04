@@ -11,6 +11,7 @@ specifiers:
   prettier: ^2.8.3
   react: ^18.2.0
   react-dom: ^18.2.0
+  remeda: ^1.6.1
   typescript: ^4.9.3
   vite: ^4.1.0
   zod: ^3.20.2
@@ -21,6 +22,7 @@ dependencies:
   lodash.set: 4.3.2
   react: 18.2.0
   react-dom: 18.2.0_react@18.2.0
+  remeda: 1.6.1
   zod: 3.20.2
 
 devDependencies:
@@ -514,6 +516,10 @@ packages:
     engines: {node: '>=0.10.0'}
     dependencies:
       loose-envify: 1.4.0
+    dev: false
+
+  /remeda/1.6.1:
+    resolution: {integrity: sha512-ywn4Tv2cPBj6hk0TEYMHusWVXu72yJNCaWUdMK7kc7x/PjQPBSvtMbmBWP4PQH791kpl3rPBe3ZVkJyPj3c+0g==}
     dev: false
 
   /resolve/1.22.1:

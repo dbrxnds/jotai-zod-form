@@ -1,6 +1,7 @@
 import { createForm } from "./form/createForm";
 import { z } from "zod";
 import { useAtom } from "jotai/react";
+import { Fragment } from "react";
 
 const DemoForm = createForm({
   schema: z.object({
@@ -16,13 +17,18 @@ const DemoForm = createForm({
 const firstNameAtom = DemoForm.getFieldAtom("firstName");
 const lastNameAtom = DemoForm.getFieldAtom("lastName");
 const addressStreetAtom = DemoForm.getFieldAtom("address.street");
-const addressCityAtom = DemoForm.getFieldAtom("adress.city");
+const addressCityAtom = DemoForm.getFieldAtom("address.city");
 
 function Child() {
   return (
     <DemoForm.Field name="firstName">
-      {({ value, setValue }) => (
-        <input value={value} onChange={(e) => setValue(e.target.value)} />
+      {({ setValue, value, initialValue, isValid, isDirty }) => (
+        <Fragment>
+          <div>Initial value: {initialValue}</div>
+          <div>Is valid: {isValid ? "yup" : "nope"}</div>
+          <div>Is dirty: {isDirty ? "yup" : "nope"}</div>
+          <input value={value} onChange={(e) => setValue(e.target.value)} />
+        </Fragment>
       )}
     </DemoForm.Field>
   );
@@ -31,7 +37,7 @@ function Child() {
 function Overview() {
   const [field, setField] = useAtom(firstNameAtom);
 
-  return <div>Overview: {field}</div>;
+  return <div>Overview: {field.value}</div>;
 }
 
 function Child2() {
@@ -57,7 +63,7 @@ function Overview2() {
 
   return (
     <div>
-      Overview: {field} - street: {addressStreet}
+      Overview: {field.value} - street: {addressStreet.value}
     </div>
   );
 }

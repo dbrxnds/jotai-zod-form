@@ -26,6 +26,6 @@ export function createForm<Schema extends z.AnyZodObject>({
   return {
     Form: createFormComponent({ schema, stateAtom, initialValuesAtom, equals }),
     getFieldAtom,
-    Field: createFieldComponent<Schema>({ getFieldAtom }),
+    Field: createFieldComponent({ getFieldAtom }),
   };
 }

@@ -1,6 +1,7 @@
 import { createForm } from "./form/createForm";
 import { z } from "zod";
 import { useAtomValue } from "jotai/react";
+import { useRef } from "react";
 
 const DemoForm = createForm({
   schema: z.object({
@@ -13,13 +14,20 @@ const DemoForm = createForm({
   }),
 });
 
+function RenderCounter() {
+  const renderCounter = useRef(0);
+  renderCounter.current = renderCounter.current + 1;
+  return <h1>Renders: {renderCounter.current}</h1>;
+}
+
 const firstNameAtom = DemoForm.getFieldAtom("firstName");
 const lastNameAtom = DemoForm.getFieldAtom("lastName");
 const addressAtom = DemoForm.getFieldAtom("address");
 
 function Form() {
   return (
-    <div>
+    <div style={{ padding: 8, backgroundColor: "orange" }}>
+      <RenderCounter />
       <h3>General Info</h3>
       <DemoForm.Field name="firstName">
         {({ value, setValue }) => (
@@ -65,7 +73,8 @@ function Overview() {
   const firstName = useAtomValue(firstNameAtom);
 
   return (
-    <div>
+    <div style={{ padding: 8, backgroundColor: "red" }}>
+      <RenderCounter />
       First name: {firstName.value} - Dirty:{""}
       {firstName.isDirty ? "Yurp" : "nope"} - isValid:{" "}
       {firstName.isValid ? "yurp" : "nope"} <br />
@@ -79,7 +88,8 @@ function AddressOverview() {
   const address = useAtomValue(addressAtom);
 
   return (
-    <div>
+    <div style={{ padding: 8, backgroundColor: "green" }}>
+      <RenderCounter />
       City: {address.value.city} <br />
       street: {address.value.street}
     </div>
@@ -102,7 +112,6 @@ function Demo() {
       >
         <Form />
         <hr />
-
         <Overview />
         <button type="submit">Submit</button>
       </DemoForm.Form>

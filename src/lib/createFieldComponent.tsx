@@ -15,7 +15,7 @@ export interface FieldComponentRenderProps<
   setValue: (newValue: Value) => void;
 }
 
-interface FieldComponentProps<
+export interface FieldComponentProps<
   Schema extends z.AnyZodObject,
   Field extends Path<z.output<Schema>>
 > {

@@ -5,7 +5,10 @@ import { createGetFieldAtom } from "./createGetFieldAtom";
 import { createFieldComponent } from "./createFieldComponent";
 import { createUseField } from "./createUseField";
 
-interface FormOptions<Schema extends z.AnyZodObject> {
+export type { FormProps } from "./createFormComponent";
+export type { FieldComponentProps } from "./createFieldComponent";
+
+interface CreateFormArgs<Schema extends z.AnyZodObject> {
   schema: Schema;
   equals?: (a: z.output<Schema>, b: z.output<Schema>) => boolean;
 }
@@ -13,7 +16,7 @@ interface FormOptions<Schema extends z.AnyZodObject> {
 export function createForm<Schema extends z.AnyZodObject>({
   schema,
   equals = (a, b) => a === b,
-}: FormOptions<Schema>) {
+}: CreateFormArgs<Schema>) {
   const formStateAtom = atom({});
   const initialValuesAtom = atom({});
 
@@ -35,7 +38,7 @@ export function createForm<Schema extends z.AnyZodObject>({
     }),
     Field: createFieldComponent({ useField }),
     getFieldAtom,
-    getFormStateAtom: () => formStateAtom,
+    formStateAtom,
     useField,
   };
 }

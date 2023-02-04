@@ -17,7 +17,7 @@ interface FormComponentRenderProps<Schema extends z.AnyZodObject>
   initialValues: z.output<Schema>;
 }
 
-interface FormProps<Schema extends z.AnyZodObject> {
+export interface FormProps<Schema extends z.AnyZodObject> {
   initialValues: z.output<Schema>;
   onSubmit: (values: z.output<Schema>) => Promise<void> | void;
   children:

@@ -1,10 +1,8 @@
-import React from "react";
+import { useMemo } from "react";
 import ReactDOM from "react-dom/client";
 import { createForm } from "./src/new/createForm";
 import { z } from "zod";
-import { useAtom, useSetAtom } from "jotai";
-import { Overview } from "./src/example/Overview";
-import { focusAtom } from "jotai-optics";
+import { useAtom } from "jotai";
 
 export const ExampleForm = createForm({
   schema: z.object({
@@ -32,24 +30,19 @@ const initialValues = {
   },
 };
 
-const cityAtom = focusAtom(ExampleForm.formStateAtom, (optic) =>
-  optic.prop("address").prop("values").prop("city").prop("value")
-);
 function Demo() {
+  const cityAtom = useMemo(() => ExampleForm.getFieldAtom("address.city"), []);
   const [city, setCity] = useAtom(cityAtom);
+  city.address.console.log({ city });
 
-  return (
-    <div>
-      <input onChange={(e) => setCity(e.target.value)} />
-    </div>
-  );
+  return <div></div>;
 }
 
 function App() {
   return (
     <ExampleForm.Form initialValues={initialValues} onSubmit={() => {}}>
       <Demo />
-      <Overview />
+      {/*<Overview />*/}
     </ExampleForm.Form>
   );
 }

@@ -1,41 +1,18 @@
 import { z } from "zod";
-import { Fragment, PropsWithChildren, useState } from "react";
+import { Fragment, PropsWithChildren, useMemo } from "react";
 import { Provider } from "jotai/react";
-import { atom, createStore, PrimitiveAtom } from "jotai/vanilla";
+import { createStore, PrimitiveAtom } from "jotai/vanilla";
 import { useHydrateAtoms } from "jotai/react/utils";
-import { FormState, toFormState } from "./toFormState";
+import { FormState } from "./createForm";
 
 interface CreateFormComponentArgs<Schema extends z.AnyZodObject> {
   schema: Schema;
-  formStateAtom: PrimitiveAtom<FormState<Schema>>;
+  formStateAtom: PrimitiveAtom<z.output<Schema>>;
 }
-
-type FormComponentRenderProps<Schema extends z.AnyZodObject> =
-  FormState<Schema> & {
-    initialValues: z.output<Schema>;
-  };
 
 export interface FormProps<Schema extends z.AnyZodObject> {
-  initialValues: z.output<Schema>;
+  initialValues: FormState<Schema>;
   onSubmit: (values: z.output<Schema>) => Promise<void> | void;
-}
-
-function toAtoms<Schema extends z.AnyZodObject>(
-  formState: FormState<Schema>
-): Record<string, PrimitiveAtom<FormState<Schema>>> {
-  return Object.entries(formState).reduce((acc, [key, value]) => {
-    if (typeof value === "object") {
-      return {
-        ...acc,
-        [key]: atom(toAtoms(value)),
-      };
-    }
-
-    return {
-      ...acc,
-      [key]: atom(value),
-    };
-  }, {});
 }
 
 export function createFormComponent<Schema extends z.AnyZodObject>({
@@ -47,13 +24,11 @@ export function createFormComponent<Schema extends z.AnyZodObject>({
     onSubmit,
     children,
   }: PropsWithChildren<FormProps<Schema>>) => {
-    const [store] = useState(() => createStore());
-
-    const initialFormState = toFormState(initialValues);
+    const store = useMemo(() => createStore(), []);
 
     return (
       <Provider store={store}>
-        <HydrateAtoms initialValues={[[formStateAtom, initialFormState]]}>
+        <HydrateAtoms initialValues={[[formStateAtom, initialValues]]}>
           <form
             onSubmit={(e) => {
               e.preventDefault();

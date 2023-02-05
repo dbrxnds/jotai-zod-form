@@ -1,8 +1,9 @@
-import { atom, PrimitiveAtom } from "jotai";
-import { Primitive, z } from "zod";
+import { atom } from "jotai";
+import { z } from "zod";
 import { createFormComponent } from "./createFormComponent";
 import { createGetFieldAtom } from "./createGetFieldAtom";
-import { FormState } from "./toFormState";
+
+export type FormState<Schema extends z.AnyZodObject> = z.output<Schema>;
 
 interface CreateFormArgs<Schema extends z.AnyZodObject> {
   schema: Schema;
@@ -12,13 +13,12 @@ interface CreateFormArgs<Schema extends z.AnyZodObject> {
 export function createForm<Schema extends z.AnyZodObject>({
   schema,
 }: CreateFormArgs<Schema>) {
-  const formStateAtom = atom({} as FormState<Schema>);
-
-  const getFieldAtom = createGetFieldAtom({ formStateAtom });
+  const formStateAtom = atom({} as z.output<Schema>);
+  const initialValuesAtom = atom({} as z.output<Schema>);
 
   return {
     formStateAtom,
     Form: createFormComponent({ schema, formStateAtom }),
-    getFieldAtom,
+    getFieldAtom: createGetFieldAtom({ formStateAtom, initialValuesAtom }),
   };
 }

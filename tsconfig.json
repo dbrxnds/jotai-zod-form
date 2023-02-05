@@ -3,7 +3,6 @@
     "target": "es2016",
     "useDefineForClassFields": true,
     "preserveSymlinks": true,
-    "baseUrl": ".",
     "allowJs": false,
     "skipLibCheck": true,
     "esModuleInterop": false,

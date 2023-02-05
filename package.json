@@ -21,7 +21,9 @@
   },
   "dependencies": {
     "dot-path-value": "0.0.4",
-    "lodash.set": "4.3.2"
+    "jotai-optics": "^0.3.0",
+    "lodash.set": "4.3.2",
+    "optics-ts": "^2.4.0"
   },
   "peerDependencies": {
     "jotai": "^2.0.0",

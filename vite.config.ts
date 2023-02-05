@@ -5,7 +5,7 @@ import dtsPlugin from "vite-plugin-dts";
 
 // https://vitejs.dev/config/
 export default defineConfig({
-  plugins: [react(), dtsPlugin()],
+  plugins: [react(), dtsPlugin({ insertTypesEntry: true })],
   build: {
     lib: {
       entry: resolve("./src/lib/createForm.ts"),

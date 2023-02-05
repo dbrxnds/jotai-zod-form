@@ -14,6 +14,20 @@
     "module": "commonjs",
     "isolatedModules": true,
     "noEmit": true,
-    "jsx": "react-jsx"
+    "jsx": "react-jsx",
+    "paths": {
+      "zod": [
+        "node_modules/zod"
+      ],
+      "react": [
+        "node_modules/react"
+      ],
+      "react-dom": [
+        "node_modules/react-dom"
+      ],
+      "jotai": [
+        "node_modules/jotai"
+      ]
+    }
   }
 }

@@ -5,9 +5,6 @@ import { createGetFieldAtom } from "./createGetFieldAtom";
 import { createFieldComponent } from "./createFieldComponent";
 import { createUseField } from "./createUseField";
 
-export type { FormProps } from "./createFormComponent";
-export type { FieldComponentProps } from "./createFieldComponent";
-
 interface CreateFormArgs<Schema extends z.AnyZodObject> {
   schema: Schema;
   equals?: (a: z.output<Schema>, b: z.output<Schema>) => boolean;

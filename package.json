@@ -4,6 +4,7 @@
   "type": "module",
   "main": "./dist/jotai-zod-form.umd.cjs",
   "module": "./dist/jotai-zod-form.js",
+  "types": "./dist/jotai-zod-form.d.ts",
   "exports": {
     ".": {
       "import": "./dist/jotai-zod-form.js",

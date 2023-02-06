@@ -1,8 +1,10 @@
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 import ReactDOM from "react-dom/client";
 import { createForm } from "./src/new/createForm";
 import { z } from "zod";
-import { useAtom } from "jotai";
+import { useAtom } from "jotai/react";
+import { Overview } from "./src/example/Overview";
+import { Box } from "./src/example/Box";
 
 export const ExampleForm = createForm({
   schema: z.object({
@@ -33,16 +35,23 @@ const initialValues = {
 function Demo() {
   const cityAtom = useMemo(() => ExampleForm.getFieldAtom("address.city"), []);
   const [city, setCity] = useAtom(cityAtom);
-  city.address.console.log({ city });
+  // const [city, setCity] = useAtom(focusedAtom);
 
-  return <div></div>;
+  return (
+    <Box color="tomato">
+      <input
+        value={city.value}
+        onChange={(e) => setCity(e.currentTarget.value)}
+      />
+    </Box>
+  );
 }
 
 function App() {
   return (
     <ExampleForm.Form initialValues={initialValues} onSubmit={() => {}}>
       <Demo />
-      {/*<Overview />*/}
+      <Overview />
     </ExampleForm.Form>
   );
 }

@@ -9,7 +9,7 @@ function PersonalOverview() {
   const personal = useAtomValue(personalAtom);
 
   return (
-    <Box color="green">
+    <Box color="orange">
       <h3>Personal</h3>
       <RenderCounter />
       <div>First name: {personal.value.firstName}</div>
@@ -18,14 +18,19 @@ function PersonalOverview() {
 }
 
 function AddressOverview() {
-  const addressAtom = useMemo(() => ExampleForm.getFieldAtom("address"), []);
-  const address = useAtomValue(addressAtom);
+  const cityAtom = useMemo(() => ExampleForm.getFieldAtom("address.city"), []);
+  const city = useAtomValue(cityAtom);
 
   return (
     <Box color="blue">
       <h3>Address</h3>
       <RenderCounter />
-      <div>City: {address.value.city}</div>
+      <div>
+        City:
+        <span style={{ color: city.isDirty() ? "red" : "green" }}>
+          {city.value}
+        </span>
+      </div>
     </Box>
   );
 }

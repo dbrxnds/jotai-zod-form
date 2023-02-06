@@ -7,7 +7,8 @@ import { FormState } from "./createForm";
 
 interface CreateFormComponentArgs<Schema extends z.AnyZodObject> {
   schema: Schema;
-  formStateAtom: PrimitiveAtom<z.output<Schema>>;
+  formStateAtom: PrimitiveAtom<FormState<Schema>>;
+  initialValuesAtom: PrimitiveAtom<z.output<Schema>>;
 }
 
 export interface FormProps<Schema extends z.AnyZodObject> {
@@ -18,6 +19,7 @@ export interface FormProps<Schema extends z.AnyZodObject> {
 export function createFormComponent<Schema extends z.AnyZodObject>({
   schema,
   formStateAtom,
+  initialValuesAtom,
 }: CreateFormComponentArgs<Schema>) {
   return ({
     initialValues,
@@ -25,6 +27,8 @@ export function createFormComponent<Schema extends z.AnyZodObject>({
     children,
   }: PropsWithChildren<FormProps<Schema>>) => {
     const store = useMemo(() => createStore(), []);
+
+    store.set(initialValuesAtom, initialValues);
 
     return (
       <Provider store={store}>

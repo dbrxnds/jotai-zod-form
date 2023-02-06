@@ -13,12 +13,12 @@ interface CreateFormArgs<Schema extends z.AnyZodObject> {
 export function createForm<Schema extends z.AnyZodObject>({
   schema,
 }: CreateFormArgs<Schema>) {
-  const formStateAtom = atom({} as z.output<Schema>);
+  const formStateAtom = atom({} as FormState<Schema>);
   const initialValuesAtom = atom({} as z.output<Schema>);
 
   return {
     formStateAtom,
-    Form: createFormComponent({ schema, formStateAtom }),
+    Form: createFormComponent({ schema, formStateAtom, initialValuesAtom }),
     getFieldAtom: createGetFieldAtom({ formStateAtom, initialValuesAtom }),
   };
 }

@@ -19,4 +19,4 @@ export type FieldState<
   errors: z.ZodIssue[];
 };
 
-export type EqualFn = (a: unknown, b: unknown) => boolean;
+export type EqualsFn = (a: unknown, b: unknown) => boolean;

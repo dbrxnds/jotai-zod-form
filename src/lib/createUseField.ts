@@ -1,8 +1,22 @@
 import { createGetFieldAtom } from "./createGetFieldAtom";
 import { useAtom } from "jotai/react";
 import { ChangeEvent, useMemo } from "react";
-import { Path } from "dot-path-value";
+import { Path, PathValue } from "dot-path-value";
 import { z } from "zod";
+import { FieldState } from "./types";
+import { SetStateAction } from "jotai/vanilla";
+
+export interface UseFieldReturn<
+  Schema extends z.AnyZodObject,
+  Field extends Path<z.output<Schema>>
+> extends FieldState<Schema, Field> {
+  getInputProps: () => {
+    value: PathValue<z.output<Schema>, Field>;
+    onChange: (event: ChangeEvent<unknown>) => void;
+    onFocus: () => void;
+  };
+  setValue: (value: SetStateAction<PathValue<z.output<Schema>, Field>>) => void;
+}
 
 interface CreateUseFieldArgs<Schema extends z.AnyZodObject> {
   getFieldAtom: ReturnType<typeof createGetFieldAtom<Schema>>;
@@ -11,7 +25,9 @@ interface CreateUseFieldArgs<Schema extends z.AnyZodObject> {
 export function createUseField<Schema extends z.AnyZodObject>({
   getFieldAtom,
 }: CreateUseFieldArgs<Schema>) {
-  return <F extends Path<z.output<Schema>>>(name: F) => {
+  return <F extends Path<z.output<Schema>>>(
+    name: F
+  ): UseFieldReturn<Schema, F> => {
     const atom = useMemo(() => getFieldAtom(name), [name]);
     const [field, setField] = useAtom(atom);
 

@@ -4,13 +4,13 @@ import { focusAtom } from "jotai-optics";
 import { OpticFor_ } from "optics-ts";
 import { getByPath, Path, PathValue } from "dot-path-value";
 import { selectAtom } from "jotai/utils";
-import { EqualFn, FormState } from "./types";
+import { EqualsFn, FormState } from "./types";
 import { SetStateAction } from "jotai/vanilla";
 
 interface CreateGetFieldAtomArgs<Schema extends z.AnyZodObject> {
   formStateAtom: PrimitiveAtom<FormState<Schema>>;
   schema: Schema;
-  equals: EqualFn;
+  equals: EqualsFn;
 }
 
 export function createGetFieldAtom<Schema extends z.AnyZodObject>({
@@ -63,6 +63,7 @@ export function createGetFieldAtom<Schema extends z.AnyZodObject>({
           const currentValue = get(focusedAtom);
 
           const finalNewValue =
+            // @ts-expect-error
             typeof newValue === "function" ? newValue(currentValue) : newValue;
 
           const isDirty = !equals(initialValue, finalNewValue);

@@ -1,41 +1,31 @@
+import { atom } from "jotai";
 import { z } from "zod";
 import { createFormComponent } from "./createFormComponent";
-import { atom } from "jotai/vanilla";
 import { createGetFieldAtom } from "./createGetFieldAtom";
-import { createFieldComponent } from "./createFieldComponent";
 import { createUseField } from "./createUseField";
+import { createFieldComponent } from "./createFieldComponent";
+import { EqualsFn, FormState } from "./types";
+import fastDeepEqual from "fast-deep-equal";
 
 interface CreateFormArgs<Schema extends z.AnyZodObject> {
   schema: Schema;
-  equals?: (a: z.output<Schema>, b: z.output<Schema>) => boolean;
+  equals?: EqualsFn;
 }
 
 export function createForm<Schema extends z.AnyZodObject>({
   schema,
-  equals = (a, b) => a === b,
+  equals = fastDeepEqual,
 }: CreateFormArgs<Schema>) {
-  const formStateAtom = atom({});
-  const initialValuesAtom = atom({});
+  const formStateAtom = atom({} as FormState<Schema>);
 
-  const getFieldAtom = createGetFieldAtom({
-    formStateAtom,
-    initialValuesAtom,
-    schema,
-    equals,
-  });
-
+  const getFieldAtom = createGetFieldAtom({ formStateAtom, schema, equals });
   const useField = createUseField({ getFieldAtom });
 
   return {
-    Form: createFormComponent({
-      schema,
-      stateAtom: formStateAtom,
-      initialValuesAtom,
-      equals,
-    }),
-    Field: createFieldComponent({ useField }),
-    getFieldAtom,
     formStateAtom,
+    Form: createFormComponent({ formStateAtom }),
+    Field: createFieldComponent({ useField }),
     useField,
+    getFieldAtom,
   };
 }

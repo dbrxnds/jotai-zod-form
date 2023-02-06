@@ -1,10 +1,10 @@
-import { useMemo, useState } from "react";
 import ReactDOM from "react-dom/client";
-import { createForm } from "./src/new/createForm";
+import { createForm } from "./src/lib/createForm";
 import { z } from "zod";
-import { useAtom } from "jotai/react";
 import { Overview } from "./src/example/Overview";
 import { Box } from "./src/example/Box";
+import { RenderCounter } from "./src/example/RenderCounter";
+import { useAtomValue } from "jotai/react";
 
 export const ExampleForm = createForm({
   schema: z.object({
@@ -33,16 +33,20 @@ const initialValues = {
 };
 
 function Demo() {
-  const cityAtom = useMemo(() => ExampleForm.getFieldAtom("address.city"), []);
-  const [city, setCity] = useAtom(cityAtom);
-  // const [city, setCity] = useAtom(focusedAtom);
+  const streetField = ExampleForm.useField("address.street");
+  const numberField = ExampleForm.useField("address.number");
+  const formState = useAtomValue(ExampleForm.formStateAtom);
 
   return (
     <Box color="tomato">
-      <input
-        value={city.value}
-        onChange={(e) => setCity(e.currentTarget.value)}
-      />
+      <pre>{JSON.stringify(formState, null, 2)}</pre>
+      <RenderCounter />
+      <ExampleForm.Field name="address.city">
+        {({ getInputProps }) => <input {...getInputProps()} />}
+      </ExampleForm.Field>
+      <input {...streetField.getInputProps()} />
+      <input type="number" {...numberField.getInputProps()} />
+      <pre>{JSON.stringify(numberField, null, 2)}</pre>
     </Box>
   );
 }

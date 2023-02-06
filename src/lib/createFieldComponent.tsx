@@ -1,41 +1,23 @@
-import { z } from "zod";
-import { Path, PathValue } from "dot-path-value";
-import { FieldState } from "./createGetFieldAtom";
-import { Fragment } from "react";
 import { createUseField } from "./createUseField";
+import { Path } from "dot-path-value";
+import { z } from "zod";
+import { Fragment } from "react";
 
-export interface FieldComponentRenderProps<
-  Schema extends z.AnyZodObject,
-  Field extends Path<z.output<Schema>>,
-  Value extends PathValue<z.output<Schema>, Field> = PathValue<
-    z.output<Schema>,
-    Field
-  >
-> extends FieldState<Value> {
-  setValue: (newValue: Value) => void;
-}
-
-export interface FieldComponentProps<
-  Schema extends z.AnyZodObject,
-  Field extends Path<z.output<Schema>>
-> {
-  name: Field;
-  children: (props: FieldComponentRenderProps<Schema, Field>) => JSX.Element;
-}
-
-interface CreateFieldComponentOptions<Schema extends z.AnyZodObject> {
+interface CreateFormComponentArgs<Schema extends z.AnyZodObject> {
   useField: ReturnType<typeof createUseField<Schema>>;
+}
+
+interface FieldProps<Schema extends z.AnyZodObject> {
+  name: Path<z.output<Schema>>;
+  children: <T>(props: T) => JSX.Element;
 }
 
 export function createFieldComponent<Schema extends z.AnyZodObject>({
   useField,
-}: CreateFieldComponentOptions<Schema>) {
-  return <Field extends Path<z.output<Schema>>>({
-    name,
-    children,
-  }: FieldComponentProps<Schema, Field>) => {
-    const [field, setValue] = useField(name);
+}: CreateFormComponentArgs<Schema>) {
+  return ({ name, children }: FieldProps<Schema>) => {
+    const field = useField(name);
 
-    return <Fragment>{children({ ...field, setValue })}</Fragment>;
+    return <Fragment>{children(field)}</Fragment>;
   };
 }

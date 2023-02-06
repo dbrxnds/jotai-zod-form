@@ -8,6 +8,7 @@ specifiers:
   '@types/react-dom': ^18.0.10
   '@vitejs/plugin-react-swc': ^3.0.0
   dot-path-value: 0.0.4
+  fast-deep-equal: ^3.1.3
   jotai: ^2.0.0
   jotai-optics: ^0.3.0
   lodash.set: 4.3.2
@@ -15,7 +16,6 @@ specifiers:
   prettier: ^2.8.3
   react: 18.2.0
   react-dom: 18.2.0
-  remeda: ^1.6.1
   typescript: ^4.9.3
   vite: ^4.1.0
   vite-plugin-dts: ^1.7.2
@@ -23,6 +23,7 @@ specifiers:
 
 dependencies:
   dot-path-value: 0.0.4
+  fast-deep-equal: 3.1.3
   jotai-optics: 0.3.0_as7qaftkwfrgm7y3gm7264laq4
   lodash.set: 4.3.2
   optics-ts: 2.4.0
@@ -38,7 +39,6 @@ devDependencies:
   prettier: 2.8.3
   react: 18.2.0
   react-dom: 18.2.0_react@18.2.0
-  remeda: 1.6.1
   typescript: 4.9.5
   vite: 4.1.1_@types+node@18.11.19
   vite-plugin-dts: 1.7.2_7rbuztiipedpplj3l6jjehnwyi
@@ -1213,7 +1213,6 @@ packages:
 
   /fast-deep-equal/3.1.3:
     resolution: {integrity: sha512-f3qQ9oQy9j2AhBe/H9VC91wLmKBCCU/gDOnKNAYG5hswO7BLKj09Hc5HYNz9cGI++xlpDCIgDaitVs03ATR84Q==}
-    dev: true
 
   /fast-glob/3.2.12:
     resolution: {integrity: sha512-DVj4CQIYYow0BlaelwK1pHl5n5cRSJfM60UA0zK891sVInoPri2Ekj7+e1CT3/3qxXenpI+nBBmQAcJPJgaj4w==}
@@ -2089,10 +2088,6 @@ packages:
       call-bind: 1.0.2
       define-properties: 1.1.4
       functions-have-names: 1.2.3
-    dev: true
-
-  /remeda/1.6.1:
-    resolution: {integrity: sha512-ywn4Tv2cPBj6hk0TEYMHusWVXu72yJNCaWUdMK7kc7x/PjQPBSvtMbmBWP4PQH791kpl3rPBe3ZVkJyPj3c+0g==}
     dev: true
 
   /require-directory/2.1.1:

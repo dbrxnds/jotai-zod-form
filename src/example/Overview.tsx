@@ -1,12 +1,9 @@
-import { useAtomValue } from "jotai";
 import { ExampleForm } from "../../main";
-import { useMemo } from "react";
 import { Box } from "./Box";
 import { RenderCounter } from "./RenderCounter";
 
 function PersonalOverview() {
-  const personalAtom = useMemo(() => ExampleForm.getFieldAtom("personal"), []);
-  const personal = useAtomValue(personalAtom);
+  const personal = ExampleForm.useField("personal");
 
   return (
     <Box color="orange">
@@ -18,8 +15,7 @@ function PersonalOverview() {
 }
 
 function AddressOverview() {
-  const cityAtom = useMemo(() => ExampleForm.getFieldAtom("address.city"), []);
-  const city = useAtomValue(cityAtom);
+  const cityField = ExampleForm.useField("address.city");
 
   return (
     <Box color="blue">
@@ -27,9 +23,10 @@ function AddressOverview() {
       <RenderCounter />
       <div>
         City:
-        <span style={{ color: city.isDirty() ? "red" : "green" }}>
-          {city.value}
+        <span style={{ color: cityField.isDirty ? "red" : "green" }}>
+          {cityField.value}
         </span>
+        <pre>{JSON.stringify(cityField, null, 2)}</pre>
       </div>
     </Box>
   );

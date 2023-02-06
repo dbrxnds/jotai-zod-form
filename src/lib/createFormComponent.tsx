@@ -1,69 +1,46 @@
 import { z } from "zod";
-import { Fragment, PropsWithChildren, useState } from "react";
+import { Fragment, PropsWithChildren, useMemo } from "react";
 import { Provider } from "jotai/react";
 import { createStore, PrimitiveAtom } from "jotai/vanilla";
 import { useHydrateAtoms } from "jotai/react/utils";
-import { FieldState } from "./createGetFieldAtom";
+import { FormState } from "./types";
 
-interface CreateFormComponentOptions<Schema extends z.AnyZodObject> {
-  schema: Schema;
-  stateAtom: PrimitiveAtom<z.output<Schema>>;
-  initialValuesAtom: PrimitiveAtom<z.output<Schema>>;
-  equals: (a: z.output<Schema>, b: z.output<Schema>) => boolean;
-}
-
-interface FormComponentRenderProps<Schema extends z.AnyZodObject>
-  extends FieldState<z.output<Schema>> {
-  initialValues: z.output<Schema>;
+interface CreateFormComponentArgs<Schema extends z.AnyZodObject> {
+  formStateAtom: PrimitiveAtom<FormState<Schema>>;
 }
 
 export interface FormProps<Schema extends z.AnyZodObject> {
-  initialValues: z.output<Schema>;
+  initialValues: FormState<Schema>["initialValues"];
   onSubmit: (values: z.output<Schema>) => Promise<void> | void;
-  children:
-    | ((props: FormComponentRenderProps<Schema>) => JSX.Element)
-    | JSX.Element
-    | JSX.Element[];
 }
 
 export function createFormComponent<Schema extends z.AnyZodObject>({
-  schema,
-  stateAtom,
-  initialValuesAtom,
-  equals,
-}: CreateFormComponentOptions<Schema>) {
-  return ({ initialValues, onSubmit, children }: FormProps<Schema>) => {
-    const [store] = useState(() => createStore());
-    const currentValue = store.get(stateAtom);
+  formStateAtom,
+}: CreateFormComponentArgs<Schema>) {
+  return ({
+    initialValues,
+    onSubmit,
+    children,
+  }: PropsWithChildren<FormProps<Schema>>) => {
+    const store = useMemo(() => createStore(), []);
 
-    if (!equals(store.get(initialValuesAtom), initialValues)) {
-      store.set(initialValuesAtom, initialValues);
-    }
-
-    const validatedForm = schema.safeParse(currentValue);
-
-    const finalChildren =
-      typeof children === "function"
-        ? children({
-            initialValues,
-            value: currentValue,
-            initialValue: initialValues,
-            isDirty: !equals(currentValue, initialValues),
-            isValid: validatedForm.success,
-            errors: validatedForm.success ? [] : validatedForm.error.errors,
-          })
-        : children;
+    const finalInitialValues: FormState<Schema> = {
+      initialValues,
+      values: initialValues,
+      touchedFields: [],
+      dirtyFields: [],
+    };
 
     return (
       <Provider store={store}>
-        <HydrateAtoms initialValues={[[stateAtom, initialValues]]}>
+        <HydrateAtoms initialValues={[[formStateAtom, finalInitialValues]]}>
           <form
             onSubmit={(e) => {
               e.preventDefault();
-              onSubmit(schema.parse(store.get(stateAtom)));
+              // onSubmit(schema.parse(store.get(stateAtom)));
             }}
           >
-            {finalChildren}
+            {children}
           </form>
         </HydrateAtoms>
       </Provider>

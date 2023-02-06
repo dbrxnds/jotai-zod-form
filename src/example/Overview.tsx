@@ -1,4 +1,4 @@
-import { ExampleForm } from "../../main";
+import { ExampleForm } from "./Example";
 import { Box } from "./Box";
 import { RenderCounter } from "./RenderCounter";
 

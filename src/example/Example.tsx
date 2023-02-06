@@ -1,9 +1,9 @@
 import ReactDOM from "react-dom/client";
-import { createForm } from "./src/lib/createForm";
+import { createForm } from "../lib/createForm";
 import { z } from "zod";
-import { Overview } from "./src/example/Overview";
-import { Box } from "./src/example/Box";
-import { RenderCounter } from "./src/example/RenderCounter";
+import { Overview } from "./Overview";
+import { Box } from "./Box";
+import { RenderCounter } from "./RenderCounter";
 import { useAtomValue } from "jotai/react";
 
 export const ExampleForm = createForm({

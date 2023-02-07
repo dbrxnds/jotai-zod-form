@@ -4,7 +4,6 @@ import { z } from "zod";
 import { Overview } from "./Overview";
 import { Box } from "./Box";
 import { RenderCounter } from "./RenderCounter";
-import { useAtomValue } from "jotai/react";
 
 export const ExampleForm = createForm({
   schema: z.object({
@@ -35,7 +34,7 @@ const initialValues = {
 function Demo() {
   const streetField = ExampleForm.useField("address.street");
   const numberField = ExampleForm.useField("address.number");
-  const formState = useAtomValue(ExampleForm.formStateAtom);
+  const formState = ExampleForm.useFormState();
 
   return (
     <Box color="tomato">

@@ -6,6 +6,7 @@ import { createUseField } from "./createUseField";
 import { createFieldComponent } from "./createFieldComponent";
 import { EqualsFn, FormState } from "./types";
 import fastDeepEqual from "fast-deep-equal";
+import { createUseFormState } from "./createUseFormState";
 
 interface CreateFormArgs<Schema extends z.AnyZodObject> {
   schema: Schema;
@@ -25,6 +26,7 @@ export function createForm<Schema extends z.AnyZodObject>({
     formStateAtom,
     Form: createFormComponent({ formStateAtom, schema }),
     Field: createFieldComponent({ useField }),
+    useFormState: createUseFormState({ formStateAtom, schema }),
     useField,
     getFieldAtom,
   };

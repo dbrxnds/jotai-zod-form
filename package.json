@@ -1,6 +1,6 @@
 {
   "name": "jotai-zod-form",
-  "version": "0.0.7",
+  "version": "0.0.8",
   "main": "./dist/jotai-zod-form.umd.cjs",
   "module": "./dist/jotai-zod-form.js",
   "types": "./dist/jotai-zod-form.d.ts",

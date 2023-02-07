@@ -1,5 +1,11 @@
 # jotai-zod-form
 
+## 0.0.8
+
+### Patch Changes
+
+- 10ca507: Fix array index Lens
+
 ## 0.0.6
 
 ### Patch Changes

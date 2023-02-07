@@ -1,5 +1,12 @@
 # jotai-zod-form
 
+## 0.0.6
+
+### Patch Changes
+
+- d61952d: - Add useFormState
+  - Make dirtyFields & touchedFields type-safe
+
 ## 0.0.5
 
 ### Patch Changes

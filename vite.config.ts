@@ -11,13 +11,13 @@ export default defineConfig({
       entry: resolve("./src/lib/createForm.ts"),
       name: "jotai-zod-form",
       fileName: "jotai-zod-form",
+      formats: ["es", "cjs", "umd"],
     },
     rollupOptions: {
       external: ["react", "jotai", "zod", "react-dom"],
       output: {
         globals: {
           react: "React",
-          "react-dom": "ReactDOM",
           jotai: "jotai",
           zod: "zod",
         },

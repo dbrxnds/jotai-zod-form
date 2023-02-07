@@ -1,6 +1,20 @@
 {
   "name": "jotai-zod-form",
+  "description": "Type-safe React form library using Jotai & Zod",
+  "author": {
+    "email": "me@dbrands.dev",
+    "name": "David Brands"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/dbrxnds/jotai-zod-form"
+  },
+  "bugs": {
+    "url": "https://github.com/dbrxnds/jotai-zod-form/issues"
+  },
+  "keywords": ["react", "jotai", "zod", "form", "typescript"],
   "version": "0.0.8",
+  "type": "module",
   "main": "./dist/jotai-zod-form.umd.cjs",
   "module": "./dist/jotai-zod-form.js",
   "types": "./dist/jotai-zod-form.d.ts",

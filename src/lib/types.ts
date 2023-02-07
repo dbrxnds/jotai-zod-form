@@ -4,8 +4,8 @@ import { Path, PathValue } from "dot-path-value";
 export type FormState<Schema extends z.AnyZodObject> = {
   values: z.output<Schema>;
   initialValues: z.output<Schema>;
-  touchedFields: string[];
-  dirtyFields: string[];
+  touchedFields: Path<z.output<Schema>>[];
+  dirtyFields: Path<z.output<Schema>>[];
 };
 
 export type FieldState<

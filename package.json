@@ -12,8 +12,14 @@
   "bugs": {
     "url": "https://github.com/dbrxnds/jotai-zod-form/issues"
   },
-  "keywords": ["react", "jotai", "zod", "form", "typescript"],
-  "version": "0.0.8",
+  "keywords": [
+    "react",
+    "jotai",
+    "zod",
+    "form",
+    "typescript"
+  ],
+  "version": "0.0.9",
   "type": "module",
   "main": "./dist/jotai-zod-form.umd.cjs",
   "module": "./dist/jotai-zod-form.js",

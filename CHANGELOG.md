@@ -1,5 +1,11 @@
 # jotai-zod-form
 
+## 0.0.9
+
+### Patch Changes
+
+- 74ee68a: Fix npm package stuff
+
 ## 0.0.8
 
 ### Patch Changes

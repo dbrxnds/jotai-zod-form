@@ -7,6 +7,7 @@ import { FormState } from "./types";
 
 interface CreateFormComponentArgs<Schema extends z.AnyZodObject> {
   formStateAtom: PrimitiveAtom<FormState<Schema>>;
+  schema: Schema;
 }
 
 export interface FormProps<Schema extends z.AnyZodObject> {
@@ -16,6 +17,7 @@ export interface FormProps<Schema extends z.AnyZodObject> {
 
 export function createFormComponent<Schema extends z.AnyZodObject>({
   formStateAtom,
+  schema,
 }: CreateFormComponentArgs<Schema>) {
   return ({
     initialValues,
@@ -37,7 +39,12 @@ export function createFormComponent<Schema extends z.AnyZodObject>({
           <form
             onSubmit={(e) => {
               e.preventDefault();
-              // onSubmit(schema.parse(store.get(stateAtom)));
+
+              const validatedValues = schema.safeParse(
+                store.get(formStateAtom).values
+              );
+
+              validatedValues.success ? onSubmit(validatedValues.data) : null;
             }}
           >
             {children}

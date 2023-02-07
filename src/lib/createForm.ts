@@ -23,7 +23,7 @@ export function createForm<Schema extends z.AnyZodObject>({
 
   return {
     formStateAtom,
-    Form: createFormComponent({ formStateAtom }),
+    Form: createFormComponent({ formStateAtom, schema }),
     Field: createFieldComponent({ useField }),
     useField,
     getFieldAtom,

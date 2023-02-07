@@ -53,9 +53,13 @@ function Demo() {
 
 function App() {
   return (
-    <ExampleForm.Form initialValues={initialValues} onSubmit={() => {}}>
+    <ExampleForm.Form
+      initialValues={initialValues}
+      onSubmit={(values) => console.log({ values })}
+    >
       <Demo />
       <Overview />
+      <button type="submit">Submit</button>
     </ExampleForm.Form>
   );
 }

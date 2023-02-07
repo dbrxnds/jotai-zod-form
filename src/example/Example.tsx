@@ -10,6 +10,7 @@ export const ExampleForm = createForm({
     personal: z.object({
       firstName: z.string(),
       lastName: z.string(),
+      pets: z.array(z.object({ name: z.string() })),
     }),
     address: z.object({
       street: z.string(),
@@ -23,6 +24,7 @@ const initialValues = {
   personal: {
     firstName: "John",
     lastName: "Doe",
+    pets: [{ name: "Dog" }],
   },
   address: {
     street: "Main Street",
@@ -45,6 +47,9 @@ function Demo() {
       </ExampleForm.Field>
       <input {...streetField.getInputProps()} />
       <input type="number" {...numberField.getInputProps()} />
+      <ExampleForm.Field name="personal.pets.0.name">
+        {(field) => <pre>{JSON.stringify(field, null, 2)}</pre>}
+      </ExampleForm.Field>
       <pre>{JSON.stringify(numberField, null, 2)}</pre>
     </Box>
   );

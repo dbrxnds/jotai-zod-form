@@ -2,10 +2,11 @@ import { z } from "zod";
 import { atom, PrimitiveAtom } from "jotai";
 import { focusAtom } from "jotai-optics";
 import { OpticFor_ } from "optics-ts";
-import { getByPath, Path, PathValue } from "dot-path-value";
+import { Path, PathValue } from "dot-path-value";
 import { selectAtom } from "jotai/utils";
 import { EqualsFn, FormState } from "./types";
 import { SetStateAction } from "jotai/vanilla";
+import { getPartialZodSchema } from "./utils/getPartialZodSchema";
 
 interface CreateGetFieldAtomArgs<Schema extends z.AnyZodObject> {
   formStateAtom: PrimitiveAtom<FormState<Schema>>;
@@ -39,7 +40,7 @@ export function createGetFieldAtom<Schema extends z.AnyZodObject>({
       formState.dirtyFields.includes(field)
     );
 
-    const validateField = validatePart(schema, field);
+    const validateField = getPartialZodSchema(schema, field);
 
     return atom(
       (get) => {
@@ -47,7 +48,7 @@ export function createGetFieldAtom<Schema extends z.AnyZodObject>({
         const isTouched = get(isTouchedAtom);
         const isDirty = get(isDirtyAtom);
 
-        const validateResult = validateField(value);
+        const validateResult = validateField.safeParse(value);
 
         return {
           value,
@@ -90,27 +91,12 @@ function createPathOptic(path: string[]) {
 
   return (optic: OpticFor_<any>) => {
     let o = optic.prop(first);
-    path.slice(1).forEach((p) => {
-      o = o.prop(p);
+    path.slice(1).forEach((part) => {
+      const finalPart = !isNaN(Number(part)) ? Number(part) : part;
+      o = o.prop(finalPart);
     });
     return o;
   };
-}
-
-function addShapePrefix(dotNotatedString: string): string {
-  return dotNotatedString.replace(/\./g, ".shape.");
-}
-
-function validatePart<Schema extends z.AnyZodObject>(
-  schema: Schema,
-  path: string
-) {
-  const partialSchema: z.ZodTypeAny = getByPath(
-    schema.shape,
-    addShapePrefix(path)
-  );
-
-  return (input: unknown) => partialSchema.safeParse(input);
 }
 
 function unique<T>(array: T[]): T[] {

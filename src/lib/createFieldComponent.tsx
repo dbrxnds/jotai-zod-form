@@ -7,7 +7,7 @@ interface CreateFormComponentArgs<Schema extends z.AnyZodObject> {
   useField: ReturnType<typeof createUseField<Schema>>;
 }
 
-interface FieldProps<
+export interface FieldProps<
   Schema extends z.AnyZodObject,
   Field extends Path<z.output<Schema>>
 > {

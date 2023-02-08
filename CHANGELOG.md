@@ -1,5 +1,11 @@
 # jotai-zod-form
 
+## 0.0.10
+
+### Patch Changes
+
+- 2632f55: Fix array editing
+
 ## 0.0.9
 
 ### Patch Changes

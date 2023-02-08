@@ -1,6 +1,5 @@
 import { atom } from "jotai";
 import { z } from "zod";
-import { createFormComponent } from "./createFormComponent";
 import { createGetFieldAtom } from "./createGetFieldAtom";
 import { createUseField } from "./createUseField";
 import { createFieldComponent } from "./createFieldComponent";
@@ -8,6 +7,8 @@ import { EqualsFn, FormState } from "./types";
 import fastDeepEqual from "fast-deep-equal";
 import { createUseFormState } from "./createUseFormState";
 import { getByPath, Path } from "dot-path-value";
+import { createUseForm } from "./createUseForm";
+import { createStore } from "jotai/vanilla";
 
 interface CreateFormArgs<Schema extends z.AnyZodObject> {
   schema: Schema;
@@ -18,6 +19,8 @@ export function createForm<Schema extends z.AnyZodObject>({
   schema,
   equals = fastDeepEqual,
 }: CreateFormArgs<Schema>) {
+  const store = createStore();
+
   const initialValuesAtom = atom({} as z.output<Schema>);
   const formValuesAtom = atom({} as z.output<Schema>);
   const touchedFieldsAtom = atom([] as Path<z.output<Schema>>[]);
@@ -49,9 +52,9 @@ export function createForm<Schema extends z.AnyZodObject>({
 
   return {
     formState,
-    Form: createFormComponent({ formState, schema }),
     Field: createFieldComponent({ useField }),
     useFormState: createUseFormState({ formState, schema }),
+    useForm: createUseForm({ formState, store }),
     useField,
     getFieldAtom,
   };

@@ -1,14 +1,12 @@
 import { z } from "zod";
 import { atom } from "jotai";
 import { focusAtom } from "jotai-optics";
-import { optic_, OpticFor_ } from "optics-ts";
+import { OpticFor_ } from "optics-ts";
 import { Path, PathValue } from "dot-path-value";
 import { selectAtom } from "jotai/utils";
 import { FormState } from "./types";
 import { SetStateAction } from "jotai/vanilla";
 import { getPartialZodSchema } from "./utils/getPartialZodSchema";
-
-optic_().path();
 
 interface CreateGetFieldAtomArgs<Schema extends z.AnyZodObject> {
   formState: FormState<Schema>;

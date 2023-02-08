@@ -4,7 +4,7 @@ import { ChangeEvent, useMemo } from "react";
 import { Path, PathValue } from "dot-path-value";
 import { z } from "zod";
 import { FieldState } from "./types";
-import { SetStateAction } from "jotai/vanilla";
+import { createStore, SetStateAction } from "jotai/vanilla";
 
 export interface UseFieldReturn<
   Schema extends z.AnyZodObject,
@@ -19,17 +19,19 @@ export interface UseFieldReturn<
 }
 
 interface CreateUseFieldArgs<Schema extends z.AnyZodObject> {
+  store: ReturnType<typeof createStore>;
   getFieldAtom: ReturnType<typeof createGetFieldAtom<Schema>>;
 }
 
 export function createUseField<Schema extends z.AnyZodObject>({
   getFieldAtom,
+  store,
 }: CreateUseFieldArgs<Schema>) {
   return <F extends Path<z.output<Schema>>>(
     name: F
   ): UseFieldReturn<Schema, F> => {
     const atom = useMemo(() => getFieldAtom(name), [name]);
-    const [field, setField] = useAtom(atom);
+    const [field, setField] = useAtom(atom, { store });
 
     const getInputProps = () => {
       return {

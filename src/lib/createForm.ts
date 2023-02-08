@@ -48,12 +48,12 @@ export function createForm<Schema extends z.AnyZodObject>({
     schema,
   });
 
-  const useField = createUseField({ getFieldAtom });
+  const useField = createUseField({ getFieldAtom, store });
 
   return {
     formState,
     Field: createFieldComponent({ useField }),
-    useFormState: createUseFormState({ formState, schema }),
+    useFormState: createUseFormState({ formState, schema, store }),
     useForm: createUseForm({ formState, store }),
     useField,
     getFieldAtom,

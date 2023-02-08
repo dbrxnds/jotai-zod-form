@@ -22,7 +22,10 @@ export function createUseForm<Schema extends z.AnyZodObject>({
       new Map([
         [formState.values, defaultValues],
         [formState.initialValues, defaultValues],
-      ])
+      ]),
+      {
+        store,
+      }
     );
 
     useEffect(() => {

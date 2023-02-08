@@ -3,7 +3,6 @@ import { createForm } from "../lib/createForm";
 import { z } from "zod";
 import { Box } from "./Box";
 import { RenderCounter } from "./RenderCounter";
-import { Component } from "react";
 
 function getRandomColor() {
   return "#" + Math.floor(Math.random() * 16777215).toString(16);
@@ -88,33 +87,10 @@ function App() {
       initialValues={initialValues}
       onSubmit={(values) => console.log({ values })}
     >
-      <ErrorBoundary>
-        <Demo />
-      </ErrorBoundary>
+      <Demo />
       <DebugDemo />
     </ExampleForm.Form>
   );
-}
-
-class ErrorBoundary extends Component<any, any> {
-  constructor(props) {
-    super(props);
-    this.state = { hasError: false };
-  }
-
-  static getDerivedStateFromError(error) {
-    // Update state so the next render will show the fallback UI.
-    return { hasError: true };
-  }
-
-  render() {
-    if (this.state.hasError) {
-      // You can render any custom fallback UI
-      return <h1>Something went wrong.</h1>;
-    }
-
-    return this.props.children;
-  }
 }
 
 ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(

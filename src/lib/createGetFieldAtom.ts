@@ -54,12 +54,6 @@ export function createGetFieldAtom<Schema extends z.AnyZodObject>({
         };
       },
       (get, set, newValue: SetStateAction<Value>) => {
-        console.log(
-          "atomWrite",
-          field,
-          typeof newValue === "function" ? newValue(get(focusedAtom)) : newValue
-        );
-
         focusedAtom.write(get, set, newValue);
 
         const value = get(focusedAtom);
@@ -80,6 +74,7 @@ function createPathOptic(path: string[]) {
     let o = optic.prop(first);
     path.slice(1).forEach((part) => {
       const isPartNumber = !isNaN(Number(part));
+      // @ts-expect-error This works and im not smart enough to figure out how to type it
       o = isPartNumber ? o.at(Number(part)) : o.prop(part);
     });
     return o;

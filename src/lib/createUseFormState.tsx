@@ -1,28 +1,32 @@
 import { z } from "zod";
-import { PrimitiveAtom } from "jotai/vanilla";
 import { FormState } from "./types";
 import { useAtomValue } from "jotai/react";
 
 interface CreateUseFormStateArgs<Schema extends z.AnyZodObject> {
-  formStateAtom: PrimitiveAtom<FormState<Schema>>;
+  formState: FormState<Schema>;
   schema: Schema;
 }
 
 export function createUseFormState<Schema extends z.AnyZodObject>({
-  formStateAtom,
+  formState,
   schema,
 }: CreateUseFormStateArgs<Schema>) {
   return () => {
-    const formState = useAtomValue(formStateAtom);
+    const values = useAtomValue(formState.values);
+    const initialValues = useAtomValue(formState.initialValues);
+    const dirtyFields = useAtomValue(formState.dirtyFields);
+    const touchedFields = useAtomValue(formState.touchedFields);
 
-    const validatedValues = schema.safeParse(formState.values);
+    const validatedValues = schema.safeParse(values);
 
     return {
-      ...formState,
+      values,
+      initialValues,
+      dirtyFields,
+      touchedFields,
       isValid: validatedValues.success,
-      isDirty: formState.dirtyFields.length > 0,
-      isTouched: formState.touchedFields.length > 0,
-      isPristine: formState.dirtyFields.length === 0,
+      isDirty: dirtyFields.length > 0,
+      isTouched: touchedFields.length > 0,
       errors: validatedValues.success ? [] : validatedValues.error.errors,
     };
   };

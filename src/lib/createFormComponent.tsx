@@ -1,22 +1,22 @@
 import { z } from "zod";
 import { Fragment, PropsWithChildren, useMemo } from "react";
 import { Provider } from "jotai/react";
-import { createStore, PrimitiveAtom } from "jotai/vanilla";
+import { createStore } from "jotai/vanilla";
 import { useHydrateAtoms } from "jotai/react/utils";
 import { FormState } from "./types";
 
 interface CreateFormComponentArgs<Schema extends z.AnyZodObject> {
-  formStateAtom: PrimitiveAtom<FormState<Schema>>;
+  formState: FormState<Schema>;
   schema: Schema;
 }
 
 export interface FormProps<Schema extends z.AnyZodObject> {
-  initialValues: FormState<Schema>["initialValues"];
+  initialValues: z.output<Schema>;
   onSubmit: (values: z.output<Schema>) => Promise<void> | void;
 }
 
 export function createFormComponent<Schema extends z.AnyZodObject>({
-  formStateAtom,
+  formState,
   schema,
 }: CreateFormComponentArgs<Schema>) {
   return ({
@@ -26,22 +26,20 @@ export function createFormComponent<Schema extends z.AnyZodObject>({
   }: PropsWithChildren<FormProps<Schema>>) => {
     const store = useMemo(() => createStore(), []);
 
-    const finalInitialValues: FormState<Schema> = {
-      initialValues,
-      values: initialValues,
-      touchedFields: [],
-      dirtyFields: [],
-    };
-
     return (
       <Provider store={store}>
-        <HydrateAtoms initialValues={[[formStateAtom, finalInitialValues]]}>
+        <HydrateAtoms
+          initialValues={[
+            [formState.initialValues, initialValues],
+            [formState.values, initialValues],
+          ]}
+        >
           <form
             onSubmit={(e) => {
               e.preventDefault();
 
               const validatedValues = schema.safeParse(
-                store.get(formStateAtom).values
+                store.get(formState.values)
               );
 
               validatedValues.success ? onSubmit(validatedValues.data) : null;

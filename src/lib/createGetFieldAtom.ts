@@ -1,43 +1,38 @@
 import { z } from "zod";
-import { atom, PrimitiveAtom } from "jotai";
+import { atom } from "jotai";
 import { focusAtom } from "jotai-optics";
-import { OpticFor_ } from "optics-ts";
+import { optic_, OpticFor_ } from "optics-ts";
 import { Path, PathValue } from "dot-path-value";
 import { selectAtom } from "jotai/utils";
-import { EqualsFn, FormState } from "./types";
+import { FormState } from "./types";
 import { SetStateAction } from "jotai/vanilla";
 import { getPartialZodSchema } from "./utils/getPartialZodSchema";
 
+optic_().path();
+
 interface CreateGetFieldAtomArgs<Schema extends z.AnyZodObject> {
-  formStateAtom: PrimitiveAtom<FormState<Schema>>;
+  formState: FormState<Schema>;
   schema: Schema;
-  equals: EqualsFn;
 }
 
 export function createGetFieldAtom<Schema extends z.AnyZodObject>({
-  formStateAtom,
+  formState,
   schema,
-  equals,
 }: CreateGetFieldAtomArgs<Schema>) {
   return <Field extends Path<z.output<Schema>>>(field: Field) => {
     type Value = PathValue<z.output<Schema>, Field>;
     const fieldParts = field.split(".");
 
-    const focusedAtom = focusAtom<FormState<Schema>, Value, void>(
-      formStateAtom,
-      createPathOptic(["values", ...fieldParts])
+    const focusedAtom = focusAtom<z.output<Schema>, Value, void>(
+      formState.values,
+      createPathOptic(fieldParts)
     );
 
-    const initialValueAtom = focusAtom<FormState<Schema>, Value, void>(
-      formStateAtom,
-      createPathOptic(["initialValues", ...fieldParts])
+    const isTouchedAtom = selectAtom(formState.touchedFields, (touchedFields) =>
+      touchedFields.includes(field)
     );
-
-    const isTouchedAtom = selectAtom(formStateAtom, (formState) =>
-      formState.touchedFields.includes(field)
-    );
-    const isDirtyAtom = selectAtom(formStateAtom, (formState) =>
-      formState.dirtyFields.includes(field)
+    const isDirtyAtom = selectAtom(formState.dirtyFields, (dirtyFields) =>
+      dirtyFields.includes(field)
     );
 
     const validateField = getPartialZodSchema(schema, field);
@@ -59,27 +54,19 @@ export function createGetFieldAtom<Schema extends z.AnyZodObject>({
         };
       },
       (get, set, newValue: SetStateAction<Value>) => {
-        set(formStateAtom, (prev) => {
-          const initialValue = get(initialValueAtom);
-          const currentValue = get(focusedAtom);
-
-          const finalNewValue =
-            // @ts-expect-error
-            typeof newValue === "function" ? newValue(currentValue) : newValue;
-
-          const isDirty = !equals(initialValue, finalNewValue);
-          const newDirtyFields = isDirty
-            ? [...prev.dirtyFields, field]
-            : prev.dirtyFields.filter((f) => f !== field);
-
-          return {
-            ...prev,
-            touchedFields: unique([...prev.touchedFields, field]),
-            dirtyFields: unique(newDirtyFields),
-          };
-        });
+        console.log(
+          "atomWrite",
+          field,
+          typeof newValue === "function" ? newValue(get(focusedAtom)) : newValue
+        );
 
         focusedAtom.write(get, set, newValue);
+
+        const value = get(focusedAtom);
+
+        if (!Array.isArray(value)) {
+          set(formState.touchedFields, (prev) => unique([...prev, field]));
+        }
       }
     );
   };
@@ -92,8 +79,8 @@ function createPathOptic(path: string[]) {
   return (optic: OpticFor_<any>) => {
     let o = optic.prop(first);
     path.slice(1).forEach((part) => {
-      const finalPart = !isNaN(Number(part)) ? Number(part) : part;
-      o = o.prop(finalPart);
+      const isPartNumber = !isNaN(Number(part));
+      o = isPartNumber ? o.at(Number(part)) : o.prop(part);
     });
     return o;
   };

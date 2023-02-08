@@ -7,11 +7,11 @@ specifiers:
   '@types/react': ^18.0.27
   '@types/react-dom': ^18.0.10
   '@vitejs/plugin-react-swc': ^3.0.0
-  dot-path-value: 0.0.4
-  fast-deep-equal: ^3.1.3
+  dot-path-value: 0.0.5
+  fast-deep-equal: 3.1.3
   jotai: ^2.0.0
-  jotai-optics: ^0.3.0
-  optics-ts: ^2.4.0
+  jotai-optics: 0.3.0
+  optics-ts: 2.4.0
   prettier: ^2.8.3
   react: 18.2.0
   react-dom: 18.2.0
@@ -22,7 +22,7 @@ specifiers:
   zod: ^3.00.0
 
 dependencies:
-  dot-path-value: 0.0.4
+  dot-path-value: 0.0.5
   fast-deep-equal: 3.1.3
   jotai-optics: 0.3.0_as7qaftkwfrgm7y3gm7264laq4
   optics-ts: 2.4.0
@@ -1182,8 +1182,8 @@ packages:
       path-type: 4.0.0
     dev: true
 
-  /dot-path-value/0.0.4:
-    resolution: {integrity: sha512-9NcaDM0Pw+bTjfqVdJl5GzjBsNZqgMIVVuTabCDJkMbXncPglBkno6ffhjusMeWpQLC48dqKBpSuCZQVUAQijQ==}
+  /dot-path-value/0.0.5:
+    resolution: {integrity: sha512-SduF/Sks4ynzXkErwREP4g2BOu7I/8NXVyZp/MWAct8ogNe9BdSXUyuMFvTVA8TbaU9mys1bdbIGdygWI9XOhA==}
     dev: false
 
   /eastasianwidth/0.2.0:

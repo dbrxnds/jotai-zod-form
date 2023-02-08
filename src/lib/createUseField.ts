@@ -13,7 +13,7 @@ export interface UseFieldReturn<
   getInputProps: () => {
     value: PathValue<z.output<Schema>, Field>;
     onChange: (event: ChangeEvent<unknown>) => void;
-    onFocus: () => void;
+    onBlur: () => void;
   };
   setValue: (value: SetStateAction<PathValue<z.output<Schema>, Field>>) => void;
 }
@@ -35,7 +35,7 @@ export function createUseField<Schema extends z.AnyZodObject>({
       return {
         value: field.value,
         onChange: getInputOnChange(setField),
-        onFocus: () => setField((prev) => prev),
+        onBlur: () => setField((prev) => prev),
       };
     };
 

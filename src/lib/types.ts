@@ -1,11 +1,12 @@
 import { z } from "zod";
 import { Path, PathValue } from "dot-path-value";
+import { Atom, PrimitiveAtom } from "jotai/vanilla";
 
 export type FormState<Schema extends z.AnyZodObject> = {
-  values: z.output<Schema>;
-  initialValues: z.output<Schema>;
-  touchedFields: Path<z.output<Schema>>[];
-  dirtyFields: Path<z.output<Schema>>[];
+  values: PrimitiveAtom<z.output<Schema>>;
+  initialValues: PrimitiveAtom<z.output<Schema>>;
+  touchedFields: PrimitiveAtom<Path<z.output<Schema>>[]>;
+  dirtyFields: Atom<Path<z.output<Schema>>[]>;
 };
 
 export type FieldState<

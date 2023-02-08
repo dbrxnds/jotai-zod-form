@@ -1,9 +1,13 @@
 import ReactDOM from "react-dom/client";
 import { createForm } from "../lib/createForm";
 import { z } from "zod";
-import { Overview } from "./Overview";
 import { Box } from "./Box";
 import { RenderCounter } from "./RenderCounter";
+import { Component } from "react";
+
+function getRandomColor() {
+  return "#" + Math.floor(Math.random() * 16777215).toString(16);
+}
 
 export const ExampleForm = createForm({
   schema: z.object({
@@ -33,26 +37,49 @@ const initialValues = {
   },
 };
 
+function PetItem({ index }: { index: number }) {
+  const petNameField = ExampleForm.useField(`personal.pets.${index}.name`);
+
+  return (
+    <Box color={getRandomColor()}>
+      <label>
+        Name
+        <input {...petNameField.getInputProps()} />
+      </label>
+      <pre>{JSON.stringify(petNameField, null, 2)}</pre>
+    </Box>
+  );
+}
+
 function Demo() {
-  const streetField = ExampleForm.useField("address.street");
-  const numberField = ExampleForm.useField("address.number");
-  const formState = ExampleForm.useFormState();
+  const pets = ExampleForm.useField("personal.pets");
 
   return (
     <Box color="tomato">
-      <pre>{JSON.stringify(formState, null, 2)}</pre>
       <RenderCounter />
       <ExampleForm.Field name="address.city">
         {({ getInputProps }) => <input {...getInputProps()} />}
       </ExampleForm.Field>
-      <input {...streetField.getInputProps()} />
-      <input type="number" {...numberField.getInputProps()} />
-      <ExampleForm.Field name="personal.pets.0.name">
-        {(field) => <pre>{JSON.stringify(field, null, 2)}</pre>}
-      </ExampleForm.Field>
-      <pre>{JSON.stringify(numberField, null, 2)}</pre>
+      {pets.value.map((_, index) => (
+        <PetItem key={index} index={index} />
+      ))}
+
+      <button
+        type="button"
+        onClick={() => {
+          pets.setValue((prev) => [...prev, { name: "" }]);
+        }}
+      >
+        Add pet
+      </button>
     </Box>
   );
+}
+
+function DebugDemo() {
+  const formState = ExampleForm.useFormState();
+
+  return <pre>{JSON.stringify(formState, null, 2)}</pre>;
 }
 
 function App() {
@@ -61,11 +88,33 @@ function App() {
       initialValues={initialValues}
       onSubmit={(values) => console.log({ values })}
     >
-      <Demo />
-      <Overview />
-      <button type="submit">Submit</button>
+      <ErrorBoundary>
+        <Demo />
+      </ErrorBoundary>
+      <DebugDemo />
     </ExampleForm.Form>
   );
+}
+
+class ErrorBoundary extends Component<any, any> {
+  constructor(props) {
+    super(props);
+    this.state = { hasError: false };
+  }
+
+  static getDerivedStateFromError(error) {
+    // Update state so the next render will show the fallback UI.
+    return { hasError: true };
+  }
+
+  render() {
+    if (this.state.hasError) {
+      // You can render any custom fallback UI
+      return <h1>Something went wrong.</h1>;
+    }
+
+    return this.props.children;
+  }
 }
 
 ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
